@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Dr. Visão - Miguelópolis</title>
+    <!-- Tailwind CSS para estilização rápida e idêntica ao original -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons para os ícones -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Estilização da barra de rolagem */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Classes utilitárias para animação do Modal */
+        .modal-enter { opacity: 0; pointer-events: none; }
+        .modal-enter-active { opacity: 1; pointer-events: auto; }
+        .slide-in { transform: translateX(100%); transition: transform 0.3s ease-out; }
+        .slide-in-active { transform: translateX(0); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans overflow-hidden h-screen flex">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col hidden md:flex">
+        <div class="p-6 border-b border-slate-100">
+            <div class="flex items-center gap-2 text-indigo-700 font-bold text-xl">
+                <i data-lucide="shopping-bag" class="w-6 h-6"></i>
+                <span>Dr. Visão</span>
+            </div>
+            <div class="flex items-center gap-1 mt-2 text-xs text-slate-500">
+                <i data-lucide="map-pin" class="w-3 h-3"></i>
+                <span id="location-display">Miguelópolis</span>
+            </div>
+        </div>
+        
+        <div class="flex-1 p-4 space-y-2 overflow-y-auto" id="week-nav">
+            <div class="text-xs font-semibold text-slate-400 mb-2 px-2 uppercase">Semanas</div>
+            <!-- Botões das semanas serão injetados aqui -->
+        </div>
+
+        <div class="mt-auto p-6 border-t border-slate-100">
+            <div class="text-xs font-semibold text-slate-400 mb-2 uppercase">Marcas em Destaque</div>
+            <div class="flex flex-wrap gap-2" id="brand-tags">
+                <!-- Tags de marcas -->
+            </div>
+        </div>
+    </aside>
+
+    <!-- Conteúdo Principal -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden relative">
+        
+        <!-- Header -->
+        <header class="bg-white border-b border-slate-200 p-6 flex justify-between items-center z-10">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-900" id="month-title">Janeiro 2026</h1>
+                <h2 class="text-sm text-slate-500 flex items-center gap-2 mt-1" id="week-theme-display">
+                    <!-- Tema da semana -->
+                </h2>
+            </div>
+            <div class="flex gap-4 text-center">
+                <div class="px-4 border-r border-slate-200">
+                    <span class="text-xl font-bold text-slate-900">11</span>
+                    <span class="block text-xs text-slate-500 uppercase">Reels</span>
+                </div>
+                <div class="px-4 border-r border-slate-200">
+                    <span class="text-xl font-bold text-slate-900">9</span>
+                    <span class="block text-xs text-slate-500 uppercase">Carrosséis</span>
+                </div>
+                <div class="px-4">
+                    <span class="text-xl font-bold text-slate-900">4</span>
+                    <span class="block text-xs text-slate-500 uppercase">Estáticos</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Grid de Posts -->
+        <main class="flex-1 overflow-y-auto p-6 bg-slate-50">
+            <div id="posts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20">
+                <!-- Cards serão injetados aqui -->
+            </div>
+        </main>
+
+        <!-- Modal Overlay -->
+        <div id="modal-overlay" class="fixed inset-0 z-50 flex justify-end bg-black/20 backdrop-blur-sm transition-all duration-300 opacity-0 pointer-events-none" onclick="closeModal()">
+            <!-- Sidebar do Modal -->
+            <div id="modal-content" class="w-full md:w-[600px] h-full bg-white shadow-2xl overflow-y-auto transform translate-x-full transition-transform duration-300" onclick="event.stopPropagation()">
+                <!-- Conteúdo do Modal será injetado aqui -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script Principal -->
+    <script>
+        // --- DADOS ---
+        const planData = {
+            strategy: {
+                month: "Janeiro 2026",
+                client: "Óticas Dr. Visão",
+                location: "Miguelópolis",
+                weeks: [
+                    {
+                        id: 1,
+                        theme: "O Futuro Chegou (Lançamento Ray-Ban Meta)",
+                        focus: "Inovação & Desejo",
+                        color: "bg-blue-600",
+                        posts: [
+                            {
+                                day: "Segunda-feira",
+                                format: "Reels",
+                                type: "Lançamento Oficial",
+                                content: {
+                                    video: "Use o criativo mais impactante (o óculos sendo colocado ou acendendo o led da câmera).",
+                                    screenText: "Isso não é apenas um óculos.",
+                                    audio: "Technology / Futuristic Beat (Trending)",
+                                    caption: "O futuro da visão chegou a Dr. Visão. 🚀 Apresentamos o novo Ray-Ban Meta: filme, tire fotos, ouça música e faça chamadas sem tirar o celular do bolso. Tudo isso com o estilo icônico que você já ama. O estoque é limitadíssimo. Garanta o seu agora.",
+                                    cta: "Comente 'META' para receber o catálogo e valores no direct.",
+                                    hashtags: "#raybanmeta #tecnologia #inovação #miguelopolis"
+                                },
+                                storyPhrase: "Uma nova semana para enxergar novas oportunidades. Bom dia! 👓",
+                                storyCombo: {
+                                    brand: "Ray-Ban Meta",
+                                    sequence: ["Vídeo curto dando zoom na câmera do óculos.", "Enquete: 'Você usaria um óculos que tira foto?' (Sim/Com certeza).", "Foto do produto na caixa com link para o WhatsApp."]
+                                }
+                            },
+                            {
+                                day: "Terça-feira",
+                                format: "Carrossel",
+                                type: "Detalhes Técnicos",
+                                content: {
+                                    structure: "1. Capa: Close-up 'O segredo está nos detalhes'. 2. Câmera 12MP Ultra-wide. 3. Áudio Open-Ear Imersivo. 4. Inteligência Artificial Integrada. 5. Produto na caixa com logo Dr. Visão.",
+                                    caption: "Você nunca viu nada igual. O Ray-Ban Meta une a proteção das melhores lentes com a tecnologia de um smartphone. Ideal para creators, motoristas e quem ama praticidade.",
+                                    cta: "Toque no link da bio e seja o primeiro a ter essa tecnologia.",
+                                    hashtags: "#smartglasses #miguelopolis #oticas #tecnologia"
+                                },
+                                storyPhrase: "Foco no que te faz bem. Ótima terça!",
+                                storyCombo: {
+                                    brand: "Ana Hickmann",
+                                    sequence: ["Foto estilo 'Flatlay' (óculos sobre uma mesa com café/revista).", "Vídeo selfie provando o modelo: 'Olha esse detalhe na haste!'.", "Link direto para o catálogo da Ana Hickmann."]
+                                }
+                            },
+                            {
+                                day: "Quarta-feira",
+                                format: "Reels",
+                                type: "Lifestyle/Uso Real",
+                                content: {
+                                    video: "Alguém andando na rua, ouvindo música (balançando a cabeça) e tocando na haste para atender uma ligação.",
+                                    screenText: "POV: Seu dia a dia com o Ray-Ban Meta.",
+                                    audio: "Som viral animado (ex: pop atual)",
+                                    caption: "Imagina capturar os melhores momentos da vida exatamente como seus olhos veem? 👀 Com o Ray-Ban Meta, você vive o momento e registra o momento. Disponível na Dr. Visão em Miguelópolis.",
+                                    cta: "Envie este post para quem precisa te dar um desse de presente!",
+                                    hashtags: "#estilodevida #wearabletech #rayban #miguelopolis"
+                                },
+                                storyPhrase: "Metade da semana: seus olhos estão descansados ou pedindo socorro?",
+                                storyCombo: {
+                                    brand: "Grazi Eyewear",
+                                    sequence: ["Boomerang abrindo e fechando a caixinha da Grazi.", "Foto de modelo (divulgação) usando o óculos.", "Texto: 'Leveza e estilo para sua quarta-feira'."]
+                                }
+                            },
+                            {
+                                day: "Quinta-feira",
+                                format: "Reels",
+                                type: "A Estética",
+                                content: {
+                                    video: "Transição rápida. Pessoa 'sem graça' -> Corta -> Pessoa estilosa com o Ray-Ban Meta Wayfarer.",
+                                    screenText: "Tech, mas com estilo clássico.",
+                                    audio: "Rock clássico ou batida fashion",
+                                    caption: "Tecnologia não precisa parecer robô. O Ray-Ban Meta mantém o design clássico Wayfarer que nunca sai de moda. Ninguém diz que é um smartglass até você começar a gravar. 😉",
+                                    cta: "Venha provar na loja hoje mesmo.",
+                                    hashtags: "#wayfarer #modamasculina #modafeminina #miguelopolis"
+                                },
+                                storyPhrase: "Ver o mundo com nitidez é um superpoder. Bom dia!",
+                                storyCombo: {
+                                    brand: "Mormaii",
+                                    sequence: ["Foto do óculos em ambiente externo (sol/natureza).", "Destaque para a flexibilidade da armação (vídeo dobrando levemente).", "CTA: 'Perfeito para o dia a dia. Venha provar'."]
+                                }
+                            },
+                            {
+                                day: "Sexta-feira",
+                                format: "Carrossel",
+                                type: "Perguntas Frequentes",
+                                content: {
+                                    structure: "Capa: Ray-Ban Meta: Dúvidas Comuns. Slide 2: Posso colocar grau? Sim! Slide 3: Bateria? Até 4h + estojo. Slide 4: Compatível iPhone/Android? Sim.",
+                                    caption: "Tiramos as principais dúvidas sobre o lançamento do ano! E sim, nós colocamos as suas lentes de grau nele com perfeição.",
+                                    cta: "Tem mais alguma dúvida? Deixe nos comentários!",
+                                    hashtags: "#duvidas #lentesdegrau #tecnologia #miguelopolis"
+                                },
+                                storyPhrase: "Sextou! Qual é o óculos que vai te acompanhar no fim de semana? 😎",
+                                storyCombo: {
+                                    brand: "Sabrina Sato",
+                                    sequence: ["Vídeo mostrando 3 modelos diferentes da marca na bancada.", "Enquete: 'Qual combina mais com seu sextou? 1, 2 ou 3?'.", "Repost da resposta vencedora com preço."]
+                                }
+                            },
+                            {
+                                day: "Sábado",
+                                format: "Reels",
+                                type: "Convite/Urgência",
+                                content: {
+                                    video: "Tour rápido pela loja mostrando o display dos Ray-Ban Meta, finalizando com a equipe dando tchau.",
+                                    screenText: "Estamos te esperando!",
+                                    audio: "Música acústica 'Good Vibes'",
+                                    caption: "Sábado é dia de passar na Dr. Visão e experimentar o futuro. Venha testar o som e a câmera do Ray-Ban Meta pessoalmente. Estamos abertos até às [horário]!",
+                                    cta: "Clique em 'como chegar' nos nossos destaques.",
+                                    hashtags: "#sabadou #compras #miguelopolis #fimdesemana"
+                                },
+                                storyPhrase: "Sábado na Dr. Visão: Estilo, café e tecnologia. Vem!",
+                                storyCombo: {
+                                    brand: "Evoke",
+                                    sequence: ["Foto com óculos de sol Evoke bem estiloso (foco no design).", "Vídeo da equipe usando: 'O queridinho do sábado'.", "Localização da loja (Sticker de mapa)."]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        id: 2,
+                        theme: "Saúde Visual e Volta à Rotina",
+                        focus: "Autoridade & Necessidade",
+                        color: "bg-emerald-600",
+                        posts: [
+                            {
+                                day: "Segunda-feira",
+                                format: "Reels",
+                                type: "Dor e Solução",
+                                content: {
+                                    video: "Pessoa esfregando os olhos na frente do PC. Corta para ela colocando óculos com filtro azul e sorrindo.",
+                                    screenText: "Dor de cabeça no final do dia? Pode ser isso.",
+                                    caption: "O excesso de telas exige proteção. Lentes com filtro de luz azul reduzem a fadiga ocular e melhoram seu sono. Comece a semana cuidando de você.",
+                                    cta: "Agende seu exame de vista pelo link na bio.",
+                                    hashtags: "#saudeocular #luzazul #homeoffice #miguelopolis"
+                                },
+                                storyPhrase: "Comece a segunda-feira com um novo olhar sobre seus objetivos.",
+                                storyCombo: { brand: "Kipling", sequence: ["Foto das hastes coloridas/estampadas da Kipling.", "Foto de uma armação infantil/teen da marca.", "Texto: 'Volta às aulas com estilo Kipling'."] }
+                            },
+                            {
+                                day: "Terça-feira",
+                                format: "Carrossel",
+                                type: "Sinais de Alerta",
+                                content: {
+                                    structure: "Título: 4 Sinais que seu grau venceu. 1. Aperta olhos para ler. 2. Dor de cabeça frontal. 3. Visão embaçada à noite. 4. Óculos com +1 ano.",
+                                    caption: "Quando foi sua última visita ao oftalmologista? Se você se identificou com 2 ou mais sinais, está na hora de renovar.",
+                                    cta: "Mande um direct para agendar sua avaliação.",
+                                    hashtags: "#miopia #astigmatismo #examedevista #miguelopolis"
+                                },
+                                storyPhrase: "Detalhes fazem a diferença. Na vida e nos seus óculos.",
+                                storyCombo: { brand: "Hickmann", sequence: ["Vídeo mostrando o detalhe do metal dourado na armação.", "Foto de rosto (modelo) sorrindo.", "Box de perguntas: 'Que nota você dá pra esse modelo?'"] }
+                            },
+                            {
+                                day: "Quarta-feira",
+                                format: "Estático",
+                                type: "Produto Premium",
+                                content: {
+                                    video: "Foto macro de lente Varilux ou Crizal mostrando transparência.",
+                                    caption: "Não é só um 'vidro'. É tecnologia óptica. Trabalhamos com as melhores lentes do mercado para garantir nitidez HD para seus olhos. Você merece ver o mundo em alta definição aqui em Miguelópolis.",
+                                    cta: "Peça um orçamento de lentes no nosso WhatsApp.",
+                                    hashtags: "#varilux #crizal #qualidade #miguelopolis"
+                                },
+                                storyPhrase: "Bom dia! Lembre-se de piscar e descansar os olhos hoje.",
+                                storyCombo: { brand: "Platini", sequence: ["Foto focada em um modelo masculino clássico.", "Texto: 'Elegância e durabilidade'.", "Link para agendar exame de vista."] }
+                            },
+                            {
+                                day: "Quinta-feira",
+                                format: "Reels",
+                                type: "Tutorial/ASMR",
+                                content: {
+                                    video: "Limpando óculos sujo com spray e microfibra. Som ASMR.",
+                                    screenText: "Pare de limpar na camiseta! 🛑",
+                                    caption: "Limpar os óculos na roupa risca as lentes e destrói o tratamento antirreflexo. Aprenda o jeito certo: Spray específico + flanela de microfibra.",
+                                    cta: "Salve essa dica para não esquecer.",
+                                    hashtags: "#dicas #cuidados #oculos #miguelopolis"
+                                },
+                                storyPhrase: "Estilo é dizer quem você é sem precisar falar. Escolha sua armação.",
+                                storyCombo: { brand: "Débora Secco (Femme Paris)", sequence: ["Vídeo experimentando um modelo 'gatinho' ousado.", "Foto com filtro preto e branco (glamour).", "Texto: 'Para quem tem personalidade forte'."] }
+                            },
+                            {
+                                day: "Sexta-feira",
+                                format: "Carrossel",
+                                type: "Mitos e Verdades",
+                                content: {
+                                    structure: "1. Ler no escuro estraga a visão? (Mito). 2. Cenoura melhora a visão? (Verdade). 3. Usar óculos de outra pessoa aumenta grau? (Mito).",
+                                    caption: "Informação também é cuidado! Quantos desses mitos você acreditava?",
+                                    cta: "Compartilhe nos stories!",
+                                    hashtags: "#curiosidades #oftalmologia #verdades #miguelopolis"
+                                },
+                                storyPhrase: "Sexta-feira com visão HD. Aproveite o dia!",
+                                storyCombo: { brand: "Ray-Ban", sequence: ["Foto de um clássico Aviador ou Hexagonal.", "Vídeo mostrando a cor da lente contra a luz.", "Sticker 'Sextou' + Link do WhatsApp."] }
+                            },
+                            {
+                                day: "Sábado",
+                                format: "Reels",
+                                type: "Humor/Lifestyle",
+                                content: {
+                                    video: "Dublagem engraçada de alguém indeciso escolhendo óculos.",
+                                    screenText: "Eu: 'Vou só dar uma olhadinha' / Eu saindo com 3 armações:",
+                                    caption: "Impossível escolher um só com tanta novidade na vitrine da Dr. Visão! 😂 Venha conferir a nova coleção de verão.",
+                                    cta: "Marque aquela amiga indecisa!",
+                                    hashtags: "#meme #humor #compras #miguelopolis"
+                                },
+                                storyPhrase: "Hoje é dia de cuidar de você. Estamos te esperando!",
+                                storyCombo: { brand: "Ana Hickmann", sequence: ["Tour rápido pela prateleira da Ana Hickmann.", "Destaque para um modelo lançamento.", "Convite: 'Venha provar este modelo hoje!'"] }
+                            }
+                        ]
+                    },
+                    {
+                        id: 3,
+                        theme: "Estilo e Tendências 2026",
+                        focus: "Conexão & Lifestyle",
+                        color: "bg-purple-600",
+                        posts: [
+                            { day: "Segunda-feira", format: "Carrossel", type: "Volta às Aulas", content: { structure: "Checklist: Material, Uniforme, Óculos novo.", caption: "O rendimento escolar começa pelos olhos. Temos armações infantis resistentes em Miguelópolis.", cta: "Traga seu filho!", hashtags: "#voltaasaulas #maes #miguelopolis" }, storyPhrase: "Segundou!", storyCombo: { brand: "Kipling (Foco Infantil)", sequence: ["Foto de óculos colorido.", "Criança usando.", "Texto: 'Resistente'."]} },
+                            { day: "Terça-feira", format: "Reels", type: "Tendência 2026", content: { video: "Transição acetato cristal e metais dourados.", screenText: "O que vai bombar em 2026 ✨", caption: "Leveza e minimalismo. Acetato cristal e metais dourados estão com tudo.", cta: "Comente '1' ou '2'.", hashtags: "#moda2026 #tendencia #miguelopolis" }, storyPhrase: "A vida é curta para óculos sem graça.", storyCombo: { brand: "Grazi Eyewear", sequence: ["Vídeo acetato cristal.", "Enquete.", "Foto no rosto."]} },
+                            { day: "Quarta-feira", format: "Estático", type: "Rosto e Formato", content: { video: "Infográfico Visagismo.", caption: "Segredo da harmonia é contraste. Nossos consultores em Miguelópolis são especialistas.", cta: "Consultoria gratuita.", hashtags: "#visagismo #autoestima #miguelopolis" }, storyPhrase: "Proteção e estilo.", storyCombo: { brand: "Sabrina Sato", sequence: ["Foto modelo Bold.", "Texto: 'Transforme seu look'.", "Link WhatsApp."]} },
+                            { day: "Quinta-feira", format: "Reels", type: "Solar", content: { video: "Colocando óculos de sol.", screenText: "Proteção UV não tem estação.", caption: "O sol de janeiro não perdoa. Proteja seus olhos com estilo.", cta: "Veja modelos.", hashtags: "#verao2026 #solar #miguelopolis" }, storyPhrase: "Já agendou exame?", storyCombo: { brand: "Mormaii", sequence: ["Vídeo esportivo.", "Foto curvatura.", "Texto: 'Pratique esportes'."]} },
+                            { day: "Sexta-feira", format: "Carrossel", type: "Armações 2 em 1", content: { structure: "Fotos Clip-on.", caption: "Um óculos, duas funções. Praticidade e economia.", cta: "Venha ver os modelos Clip-on.", hashtags: "#clipon #economia #miguelopolis" }, storyPhrase: "Sexta pede óculos de sol.", storyCombo: { brand: "Evoke", sequence: ["Foto conceitual.", "Texto estilizado.", "Música eletrônica."]} },
+                            { day: "Sábado", format: "Reels", type: "Bastidores", content: { video: "Time lapse montagem.", screenText: "Feito com precisão.", caption: "O cuidado que seus olhos merecem. Bom final de semana!", cta: "Vem pra Dr. Visão!", hashtags: "#qualidade #miguelopolis" }, storyPhrase: "Sábado de sol e novidades.", storyCombo: { brand: "Ray-Ban", sequence: ["Mesa com opções.", "Mão escolhendo.", "Localização."]} }
+                        ]
+                    },
+                    {
+                        id: 4,
+                        theme: "Prova Social e Ofertas",
+                        focus: "Confiança & Conversão",
+                        color: "bg-orange-500",
+                        posts: [
+                            { day: "Segunda-feira", format: "Estático", type: "Depoimento", content: { video: "Foto cliente feliz.", caption: "'O atendimento da Dr. Visão mudou minha relação com óculos'. Obrigado Miguelópolis!", cta: "Conte sua experiência.", hashtags: "#feedback #miguelopolis" }, storyPhrase: "Nova semana, nova visão.", storyCombo: { brand: "Hickmann", sequence: ["Foto detalhe.", "Texto: 'Encanto'.", "Link coleção."]} },
+                            { day: "Terça-feira", format: "Reels", type: "Ray-Ban Meta Reminder", content: { video: "Recap Ray-Ban Meta.", screenText: "Últimas unidades.", caption: "Sucesso de Janeiro! Garanta as últimas unidades do óculos inteligente.", cta: "Chame no Direct.", hashtags: "#tech #miguelopolis" }, storyPhrase: "Cuide de seus olhos.", storyCombo: { brand: "Ray-Ban Meta", sequence: ["Vídeo POV.", "Texto: 'Gravado com óculos'.", "Link compra."]} },
+                            { day: "Quarta-feira", format: "Carrossel", type: "Lentes de Contato", content: { structure: "Vantagens lentes de contato.", caption: "Alterne óculos com lentes. Liberdade para academia e festas.", cta: "Agende teste.", hashtags: "#lentes #liberdade #miguelopolis" }, storyPhrase: "Beleza no olhar.", storyCombo: { brand: "Platini", sequence: ["Foto leve.", "Texto: 'Discrição'.", "Botão coração."]} },
+                            { day: "Quinta-feira", format: "Reels", type: "Humor/Identificação", content: { video: "Memes de quem usa óculos.", caption: "Quem nunca? 😂 Marque aquele amigo cego.", cta: "Compartilhe.", hashtags: "#humor #miguelopolis" }, storyPhrase: "Quase lá!", storyCombo: { brand: "Débora Secco", sequence: ["Vídeo unboxing.", "Foto estojo.", "Texto: 'Luxo'."]} },
+                            { day: "Sexta-feira", format: "Estático", type: "Resumo do Mês", content: { video: "Foto equipe.", caption: "Janeiro foi incrível em Miguelópolis! Aproveite os últimos dias.", cta: "Link na bio.", hashtags: "#ofertas #miguelopolis" }, storyPhrase: "Prepare o visual.", storyCombo: { brand: "Ana Hickmann", sequence: ["3 óculos lado a lado.", "Qual você escolhe?", "Cupom."]} },
+                            { day: "Sábado", format: "Reels", type: "Bom dia/Lifestyle", content: { video: "Café na loja.", screenText: "Sábado pede óculos novo.", caption: "Vitrines renovadas. Vem fechar o mês com chave de ouro!", cta: "Visite-nos.", hashtags: "#sabadou #miguelopolis" }, storyPhrase: "Último sábado!", storyCombo: { brand: "Mix de Marcas", sequence: ["Panorâmica.", "Equipe dando tchau.", "Localização."]} }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        const brandsList = [
+            "Ana Hickmann", "Ray-Ban", "Mormaii", "Grazi", "Sabrina Sato", "Evoke", "Kipling"
+        ];
+
+        // --- ESTADO ---
+        let activeWeekId = 1;
+        
+        // --- INICIALIZAÇÃO ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderBrandTags();
+            renderAll();
+        });
+
+        function renderAll() {
+            renderSidebar();
+            renderHeader();
+            renderPosts();
+            lucide.createIcons();
+        }
+
+        // --- RENDERIZAÇÃO ---
+        
+        function renderBrandTags() {
+            const container = document.getElementById('brand-tags');
+            container.innerHTML = brandsList.map(brand => 
+                `<span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-1 rounded-full">${brand}</span>`
+            ).join('');
+        }
+
+        function renderSidebar() {
+            const container = document.getElementById('week-nav');
+            container.innerHTML = `
+                <div class="text-xs font-semibold text-slate-400 mb-2 px-2 uppercase">Semanas</div>
+                ${planData.strategy.weeks.map(week => `
+                    <button onclick="changeWeek(${week.id})" 
+                        class="w-full text-left p-3 rounded-lg flex items-center justify-between transition-all duration-200 mb-1 ${activeWeekId === week.id ? 'bg-indigo-50 text-indigo-700 shadow-sm' : 'hover:bg-slate-100 text-slate-600'}">
+                        <div class="flex flex-col">
+                            <span class="font-medium text-sm">Semana ${week.id}</span>
+                            <span class="text-xs opacity-75 truncate max-w-[140px]">${week.focus}</span>
+                        </div>
+                        ${activeWeekId === week.id ? '<i data-lucide="chevron-right" class="w-4 h-4"></i>' : ''}
+                    </button>
+                `).join('')}
+            `;
+        }
+
+        function renderHeader() {
+            const currentWeek = planData.strategy.weeks.find(w => w.id === activeWeekId);
+            document.getElementById('month-title').innerText = planData.strategy.month;
+            document.getElementById('week-theme-display').innerHTML = `
+                <span class="w-2 h-2 rounded-full ${currentWeek.color}"></span>
+                ${currentWeek.theme}
+            `;
+        }
+
+        function getFormatIcon(format) {
+            switch(format) {
+                case 'Reels': return '<i data-lucide="video" class="w-5 h-5 text-pink-600"></i>';
+                case 'Carrossel': return '<i data-lucide="layers" class="w-5 h-5 text-blue-600"></i>';
+                case 'Estático': return '<i data-lucide="image" class="w-5 h-5 text-purple-600"></i>';
+                default: return '<i data-lucide="zap" class="w-5 h-5 text-gray-600"></i>';
+            }
+        }
+
+        function renderPosts() {
+            const currentWeek = planData.strategy.weeks.find(w => w.id === activeWeekId);
+            const grid = document.getElementById('posts-grid');
+            
+            grid.innerHTML = currentWeek.posts.map((post, index) => {
+                // Serializar o objeto post para passar como string segura na função
+                const postString = encodeURIComponent(JSON.stringify(post));
+                
+                return `
+                <div onclick="openModal('${postString}')" class="bg-white rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-indigo-300 transition-all cursor-pointer group flex flex-col h-full">
+                    <!-- Header do Card -->
+                    <div class="p-4 border-b border-slate-100 flex justify-between items-start">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-1">${post.day}</span>
+                            <h3 class="font-semibold text-slate-800 leading-tight group-hover:text-indigo-600">${post.type}</h3>
+                        </div>
+                        <div class="p-2 bg-slate-50 rounded-lg group-hover:bg-indigo-50 transition-colors">
+                            ${getFormatIcon(post.format)}
+                        </div>
+                    </div>
+
+                    <!-- Corpo do Card -->
+                    <div class="p-4 flex-1">
+                        <p class="text-sm text-slate-500 line-clamp-3 mb-3">${post.content.caption}</p>
+                        <div class="flex gap-2 flex-wrap mb-3">
+                            ${post.content.hashtags.split(' ').slice(0, 2).map(tag => 
+                                `<span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded-md">${tag}</span>`
+                            ).join('')}
+                            <span class="text-xs text-slate-400 py-1">+mais</span>
+                        </div>
+                        
+                        ${post.storyCombo ? `
+                        <div class="mt-2 flex items-center gap-2 p-2 bg-pink-50 rounded-md border border-pink-100">
+                            <i data-lucide="camera" class="w-3 h-3 text-pink-600"></i>
+                            <span class="text-xs font-semibold text-pink-700 truncate">Story: ${post.storyCombo.brand}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- Footer do Card -->
+                    <div class="p-3 bg-slate-50 rounded-b-xl border-t border-slate-100 flex justify-end items-center text-xs text-slate-500">
+                        <span class="text-indigo-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity">Ver Detalhes →</span>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        // --- AÇÕES ---
+
+        function changeWeek(id) {
+            activeWeekId = id;
+            renderAll();
+        }
+
+        function openModal(postDataEncoded) {
+            const post = JSON.parse(decodeURIComponent(postDataEncoded));
+            const overlay = document.getElementById('modal-overlay');
+            const content = document.getElementById('modal-content');
+            
+            // Popula o modal
+            content.innerHTML = `
+                <div class="sticky top-0 bg-white z-10 border-b border-slate-100 p-6 flex justify-between items-start">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="px-2 py-1 bg-indigo-100 text-indigo-700 text-xs font-bold rounded uppercase">${post.format}</span>
+                            <span class="text-slate-400 text-sm">${post.day}</span>
+                        </div>
+                        <h2 class="text-2xl font-bold text-slate-800">${post.type}</h2>
+                    </div>
+                    <button onclick="closeModal()" class="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                        <i data-lucide="x" class="w-6 h-6 text-slate-500"></i>
+                    </button>
+                </div>
+
+                <div class="p-6 space-y-8">
+                    <!-- Seção Visual -->
+                    <div class="space-y-3">
+                        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide flex items-center gap-2">
+                            <i data-lucide="layout-grid" class="w-4 h-4"></i> Visual / Roteiro
+                        </h3>
+                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 text-slate-700 text-sm leading-relaxed">
+                            ${post.content.video || post.content.structure}
+                        </div>
+                        ${post.content.screenText ? `
+                        <div class="bg-pink-50 p-3 rounded-lg border border-pink-100 text-pink-800 text-sm">
+                            <span class="font-bold">Texto na tela:</span> "${post.content.screenText}"
+                        </div>` : ''}
+                        ${post.content.audio ? `
+                        <div class="bg-blue-50 p-3 rounded-lg border border-blue-100 text-blue-800 text-sm flex items-center gap-2">
+                            <i data-lucide="zap" class="w-4 h-4"></i> <span class="font-bold">Áudio:</span> ${post.content.audio}
+                        </div>` : ''}
+                    </div>
+
+                    <!-- Seção Legenda -->
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide flex items-center gap-2">
+                                <i data-lucide="copy" class="w-4 h-4"></i> Legenda
+                            </h3>
+                            <button onclick="copyToClipboard(this, '${encodeURIComponent(post.content.caption)}')" class="text-xs flex items-center gap-1 text-indigo-600 hover:text-indigo-800 font-medium">
+                                <i data-lucide="copy" class="w-3 h-3"></i> Copiar
+                            </button>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg border border-slate-300 text-slate-700 text-sm whitespace-pre-line shadow-sm">
+                            ${post.content.caption}
+                            <br/><br/>
+                            <span class="text-indigo-600 font-medium">${post.content.hashtags}</span>
+                        </div>
+                    </div>
+
+                    <!-- Seção Story Combo -->
+                    ${post.storyCombo ? `
+                    <div class="border-t border-slate-200 pt-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide flex items-center gap-2">
+                                <i data-lucide="instagram" class="w-4 h-4 text-pink-600"></i> Combo de Stories
+                            </h3>
+                            <span class="bg-pink-100 text-pink-700 px-2 py-1 rounded text-xs font-bold">${post.storyCombo.brand}</span>
+                        </div>
+                        <div class="grid grid-cols-1 gap-3">
+                            <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-4 rounded-xl border border-purple-100 shadow-sm">
+                                <h4 class="text-xs font-bold text-purple-700 uppercase mb-3 tracking-wider">Sequência Sugerida</h4>
+                                <div class="space-y-3">
+                                    ${post.storyCombo.sequence.map((step, idx) => `
+                                    <div class="flex gap-3 items-start">
+                                        <span class="flex-shrink-0 w-5 h-5 rounded-full bg-white text-purple-600 text-xs font-bold flex items-center justify-center border border-purple-100 shadow-sm">${idx + 1}</span>
+                                        <p class="text-sm text-slate-700 leading-tight pt-0.5">${step}</p>
+                                    </div>`).join('')}
+                                </div>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg border border-slate-200 flex justify-between items-center gap-3">
+                                <div class="flex-1">
+                                    <span class="text-[10px] text-slate-400 uppercase font-bold block mb-1">Frase de Bom Dia</span>
+                                    <p class="text-sm text-slate-600 italic">"${post.storyPhrase}"</p>
+                                </div>
+                                <button onclick="copyToClipboard(this, '${encodeURIComponent(post.storyPhrase)}')" class="p-2 hover:bg-slate-50 rounded-full text-slate-400 hover:text-indigo-600">
+                                    <i data-lucide="copy" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>` : ''}
+
+                    <!-- Seção CTA -->
+                    <div class="bg-green-50 p-4 rounded-lg border border-green-200 mt-4">
+                        <h4 class="text-green-800 font-bold text-sm mb-1">Chamada para Ação (CTA)</h4>
+                        <p class="text-green-700 text-sm">${post.content.cta}</p>
+                    </div>
+                </div>
+            `;
+
+            // Mostra o modal (animação CSS)
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+            content.classList.remove('translate-x-full');
+            
+            // Re-renderiza ícones dentro do modal
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            const overlay = document.getElementById('modal-overlay');
+            const content = document.getElementById('modal-content');
+            
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+            content.classList.add('translate-x-full');
+        }
+
+        function copyToClipboard(btnElement, textEncoded) {
+            const text = decodeURIComponent(textEncoded);
+            navigator.clipboard.writeText(text).then(() => {
+                const originalHTML = btnElement.innerHTML;
+                btnElement.innerHTML = `<i data-lucide="check-circle" class="w-3 h-3 text-green-600"></i> <span class="text-green-600">Copiado!</span>`;
+                lucide.createIcons();
+                
+                setTimeout(() => {
+                    btnElement.innerHTML = originalHTML;
+                    lucide.createIcons();
+                }, 2000);
+            });
+        }
+
+    </script>
+</body>
+</html>
